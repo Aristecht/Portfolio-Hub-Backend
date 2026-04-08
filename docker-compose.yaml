@@ -24,6 +24,8 @@ services:
       - redis_data:/data
     networks:
       - portfolio-hub-backend
+    sysctls:
+      - vm.overcommit_memory=1
       
 volumes:
   postgres_data:
