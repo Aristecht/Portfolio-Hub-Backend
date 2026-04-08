@@ -34,7 +34,21 @@ export class FirebaseService implements OnModuleInit {
       let credential: admin.credential.Credential;
 
       if (serviceAccountJson) {
-        const parsed = JSON.parse(serviceAccountJson);
+        const normalizedJson = serviceAccountJson
+          .trim()
+          .replace(/^'(.*)'$/s, '$1')
+          .replace(/^"(.*)"$/s, '$1');
+
+        let parsed: admin.ServiceAccount;
+        try {
+          parsed = JSON.parse(normalizedJson) as admin.ServiceAccount;
+        } catch {
+          console.log(
+            '❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON. Provide a single-line valid JSON object.',
+          );
+          return;
+        }
+
         credential = admin.credential.cert(parsed as admin.ServiceAccount);
       } else {
         const resolvedCredentialsPath =
