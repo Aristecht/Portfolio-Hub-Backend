@@ -1,0 +1,957 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AlbumMetaModel {
+  limit: Float!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+type AlbumModel {
+  createdAt: DateTime!
+  id: ID!
+  isPublic: Boolean!
+  projectCount: Int
+  projects: [AlbumProjectModel!]
+  thumbnailUrl: String!
+  title: String!
+  updatedAt: DateTime!
+  user: AlbumUserModel
+}
+
+type AlbumPreviewModel {
+  id: String!
+  isPublic: Boolean!
+  projectsCount: Int!
+  thumbnailUrl: String!
+  title: String!
+}
+
+type AlbumProjectMediaModel {
+  id: ID!
+  mediaType: String!
+  url: String!
+}
+
+type AlbumProjectModel {
+  commentsCount: Int!
+  createdAt: DateTime!
+  id: ID!
+  isPublic: Boolean!
+  likes: Int!
+  media: [AlbumProjectMediaModel!]!
+  tags: [String!]!
+  title: String
+}
+
+type AlbumUserModel {
+  avatar: String
+  id: ID!
+  username: String!
+}
+
+type AlbumUserModell {
+  avatar: String
+  displayName: String
+  followers: Int!
+  id: ID!
+  isFollowing: Boolean
+  username: String!
+}
+
+type ApprovePayoutResponseModel {
+  amount: Int!
+  payoutId: String!
+  success: Boolean!
+}
+
+type AuthModel {
+  message: String
+  user: UserModel
+}
+
+type BalanceModel {
+  availableBalance: Int!
+  totalPaidOut: Int!
+  totalReceived: Int!
+}
+
+input ChangeEmailInput {
+  email: String!
+}
+
+input ChangeNotificationsSettingsInput {
+  pushNotifications: Boolean
+  siteNotifications: Boolean
+}
+
+input ChangePasswordInput {
+  newPassword: String!
+  oldPassword: String
+}
+
+input ChangeProfileInput {
+  bio: String!
+  displayName: String!
+  username: String!
+}
+
+type ChannelModel {
+  albums: [AlbumPreviewModel!]!
+  avatar: String
+  bio: String
+  createdAt: DateTime!
+  displayName: String!
+  id: ID!
+  isFollowing: Boolean!
+  projects: [ProjectPreviewModel!]!
+  socialLinks: [ChannelSocialLinkModel!]!
+  stats: ChannelStatsModel!
+  username: String!
+}
+
+type ChannelSocialLinkModel {
+  id: String!
+  position: Int!
+  title: String!
+  url: String!
+}
+
+type ChannelStatsModel {
+  albumsCount: Int!
+  followersCount: Int!
+  followingCount: Int!
+  projectsCount: Int!
+  totalLikes: Int!
+  totalViews: Int!
+}
+
+type ChatMemberModel {
+  user: UserChatInfoModel!
+}
+
+type ChatMessagesMetaModel {
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+type ChatMessagesResponseModel {
+  data: [MessageModel!]!
+  meta: ChatMessagesMetaModel!
+}
+
+type ChatModel {
+  id: String!
+  lastMessage: MessageModel
+  members: [UserChatInfoModel!]!
+  unreadCount: Int!
+  updatedAt: DateTime!
+}
+
+type CommentMetaModel {
+  limit: Float!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+type CommentModel {
+  createdAt: DateTime!
+  id: String!
+  parentId: String
+  projectId: String!
+  replies: [CommentModel!]
+  repliesCount: Int!
+  text: String!
+  updatedAt: DateTime!
+  user: UserInfoCommentModel!
+  userId: String!
+}
+
+type CommnetCountModel {
+  count: String!
+}
+
+input CreateAlbumInput {
+  isPublic: Boolean
+  thumbnailUrl: String
+  title: String!
+}
+
+input CreateCommentInput {
+  parentId: String
+  projectId: String!
+  text: String!
+}
+
+input CreateDonationTierInput {
+  amount: Float!
+  benefits: [String!]
+  description: String
+  title: String!
+}
+
+input CreatePaymentInput {
+  isAnonymous: Boolean
+  message: String
+  paymentMethod: PaymentMethod!
+  tierId: String!
+}
+
+type CreatePaymentResponseModel {
+  amount: Int!
+  expiresAt: String!
+  method: PaymentMethod!
+  paymentId: String!
+  paymentUrl: String!
+  qrCode: String
+  webUrl: String
+}
+
+input CreateProjectInput {
+  description: String
+  isPublic: Boolean
+  projectId: String!
+  tags: [String!]
+  title: String!
+}
+
+input CreateTagInput {
+  projectId: String!
+  tag: String!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeactivateAccountInput {
+  email: String!
+  password: String!
+  pin: String
+}
+
+type DeviceModel {
+  browser: String!
+  os: String!
+  type: String!
+}
+
+type DevicesModel {
+  createdAt: DateTime!
+  deviceName: String!
+  deviceType: String!
+  id: ID!
+  lastUsedAt: DateTime!
+  token: String!
+  userId: String!
+}
+
+type DonationMetaModel {
+  limit: Float!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+type DonationStatsModel {
+  donationsGivenCount: Int!
+  donationsReceivedCount: Int!
+  totalGiven: Int!
+  totalReceived: Int!
+  uniqueDonorsCount: Int!
+}
+
+type DonationTierModel {
+  amount: Int!
+  authorId: String!
+  benefits: [String!]!
+  createdAt: DateTime!
+  currency: String!
+  description: String!
+  id: String!
+  isActive: Boolean!
+  position: Int!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type EarnOnFeeModel {
+  totalPlatformFee: Int!
+  totalReceived: Int!
+}
+
+input EditMessageInput {
+  messageId: String!
+  newText: String!
+  userId: String!
+}
+
+input EnableTotpInput {
+  pin: String!
+  secret: String!
+}
+
+input FilterAlbumInput {
+  limit: Int = 10
+  page: Int = 1
+  publicOnly: Boolean = true
+  search: String
+}
+
+type FilterAlbumModel {
+  data: [AlbumModel!]!
+  meta: AlbumMetaModel!
+}
+
+input FilterCommentInput {
+  limit: Int = 20
+  page: Int = 1
+  parentId: String
+  projectId: String!
+}
+
+type FilterCommentModel {
+  data: [CommentModel!]!
+  meta: CommentMetaModel!
+}
+
+input FilterProjectInput {
+  limit: Int = 10
+  page: Int = 1
+  publicOnly: Boolean = true
+  search: String
+  tags: [String!]
+}
+
+type FilterProjectModel {
+  data: [ProjectModel!]!
+  meta: ProjectMetaModel!
+}
+
+input FindFollowers {
+  limit: Int = 20
+  page: Int = 1
+  username: String!
+}
+
+input FindFollowings {
+  limit: Int = 20
+  page: Int = 1
+  username: String!
+}
+
+type FollowModel {
+  createdAt: DateTime!
+  follower: UserModel
+  followerId: String
+  following: UserModel
+  followingId: String
+  id: ID!
+  updatedAt: DateTime!
+}
+
+type FullModelProject {
+  id: String!
+  title: String!
+  user: AlbumUserModell!
+}
+
+type GetOrCreateChatModel {
+  chatMembers: [ChatMemberModel!]!
+  id: String!
+  messages: [MessageModel!]!
+}
+
+input GetRepliesInput {
+  commentId: String!
+  limit: Int = 20
+  page: Int = 1
+}
+
+input HistoryPaymentInput {
+  limit: Int = 10
+  page: Int = 1
+}
+
+type LocationModel {
+  city: String!
+  country: String!
+  latitude: Float!
+  longtitude: Float!
+}
+
+input LoginInput {
+  login: String!
+  password: String!
+  pin: String
+}
+
+type MediaModel {
+  createdAt: DateTime!
+  id: String!
+  mediaType: MediaType!
+  projectId: String!
+  updatedAt: DateTime!
+  url: String!
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+type MessageModel {
+  chatId: String!
+  createdAt: DateTime!
+  id: String!
+  isEdited: Boolean!
+  isRead: Boolean!
+  sender: UserChatInfoModel!
+  senderId: String!
+  text: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  addTag(data: CreateTagInput!): Boolean!
+  approvePayout(payoutId: String!, transactionId: String!): ApprovePayoutResponseModel!
+  changeEmail(data: ChangeEmailInput!): Boolean!
+  changeNotificationSettings(data: ChangeNotificationsSettingsInput!): changeNotificationSettingsModel!
+  changePassword(data: ChangePasswordInput!): Boolean!
+  changeProfileInfo(data: ChangeProfileInput!): Boolean!
+  clearSessionCookie: Boolean!
+  createAlbum(data: CreateAlbumInput!): AlbumModel!
+  createComment(data: CreateCommentInput!): CommentModel!
+  createDonationTier(data: CreateDonationTierInput!): DonationTierModel!
+  createDraftProject(albumId: String!): String!
+  createPayment(data: CreatePaymentInput!): CreatePaymentResponseModel!
+  createProject(data: CreateProjectInput!): ProjectModel!
+  createRefund(data: RefundPaymentInput!): RefundResponseModel!
+  createSocialLink(data: SocialLinkInput!): Boolean!
+  createUser(data: CreateUserInput!): UserModel!
+  deactivateAccount(data: DeactivateAccountInput!): AuthModel!
+  deleteDonationTier(tierId: String!): Boolean!
+  deleteDraftProject(projectId: String!): Boolean!
+  deleteMessage(messageId: String!): Boolean!
+  deleteProject(projectId: String!): Boolean!
+  disableTotp: Boolean!
+  editMessage(data: EditMessageInput!): MessageModel!
+  enableTotp(data: EnableTotpInput!): Boolean!
+  followUser(channelId: String!): Boolean!
+  getOrCreateChat(userId: String!): GetOrCreateChatModel!
+  incrementProjectView(projectId: String!): Int!
+  loginUser(data: LoginInput!): AuthModel!
+  logoutUser: Boolean!
+  markAllNotificationAsRead: Boolean!
+  markNotificationAsRead(ids: [String!]!): Boolean!
+  newEmail(data: NewEmailInput!): Boolean!
+  newPassword(data: NewPasswordInput!): Boolean!
+  registerDeviceToken(data: RegisterDeviceTokenInput!): Boolean!
+  rejectPayout(payoutId: String!, reason: String!): Boolean!
+  removeAlbum(id: String!): Boolean!
+  removeComment(id: String!): Boolean!
+  removeDeviceToken(token: String!): Boolean!
+  removePayoutMethod: Boolean!
+  removeSession(id: String!): Boolean!
+  removeSocialLink(id: String!): Boolean!
+  removeTag(data: RemoveTagInput!): Boolean!
+  reorderSocialLinks(list: [SocialLinkOrderInput!]!): Boolean!
+  requestPayout: RequestPayoutResponseModel!
+  resetPassword(data: ResetPasswordInput!): Boolean!
+  setProjectLike(like: Boolean!, projectId: String!): ProjectModel!
+  setupPayoutMethod(data: SetupPayoutInput!): SetupPayoutResponseModel!
+  startProcessingPayout(payoutId: String!): ProcessPayoutResponseModel!
+  toggleLike(projectId: String!): ProjectModel!
+  unfollowUser(channelId: String!): Boolean!
+  updateAlbum(data: UpdateAlbumInput!): AlbumModel!
+  updateComment(data: UpdateCommentInput!): CommentModel!
+  updateDonationTier(data: UpdateDonationTierInput!): DonationTierModel!
+  updatePayoutMethod(data: SetupPayoutInput!): SetupPayoutResponseModel!
+  updateProject(data: UpdateProjectInput!): ProjectModel!
+  updateSocialLink(data: SocialLinkInput!, id: String!): Boolean!
+  verifyAccount(data: VerificationInput!): UserModel!
+}
+
+input NewEmailInput {
+  token: String!
+}
+
+input NewPasswordInput {
+  password: String!
+  passwordRepeat: String!
+  token: String!
+}
+
+type NotificationMetaModel {
+  limit: Float!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+type NotificationModel {
+  actorId: String
+  albumId: String
+  commentId: String
+  createdAt: DateTime!
+  id: ID!
+  isRead: Boolean!
+  message: String!
+  projectId: String
+  type: NotificationsType!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: String!
+}
+
+type NotificationSettingsModel {
+  createdAt: DateTime!
+  id: ID!
+  pushNotifications: Boolean!
+  siteNotifications: Boolean!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: String!
+}
+
+enum NotificationsType {
+  COMMENT_REPLY
+  DISABLE_TWO_FACTOR
+  DONATION_RECEIVED
+  ENABLE_TWO_FACTOR
+  NEW_FOLLOWER
+  NEW_PROJECT
+  NEW_SPONSORSHIP
+  PAYOUT_SUCCESS
+  PROJECT_COMMENT
+  PROJECT_LIKE
+  REFUND_PROCESSED
+  VERIFIED_CHANNEL
+}
+
+type OutputDonationHistoryModel {
+  data: [PaymentModel!]!
+  meta: DonationMetaModel!
+}
+
+type OutputFollowModel {
+  data: [FollowModel!]!
+  meta: ProfileMetaModel!
+}
+
+type OutputNotificationModel {
+  data: [NotificationModel!]!
+  meta: NotificationMetaModel!
+}
+
+input PageLimitInput {
+  limit: Int = 20
+  page: Int = 1
+}
+
+type PaginationMeta {
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+enum PaymentMethod {
+  FREEDOM_PAY
+  KASPI_PAY
+}
+
+type PaymentModel {
+  amount: Int!
+  createdAt: DateTime!
+  currency: String!
+  donor: UserInfoModel!
+  id: String!
+  isAnonymous: Boolean!
+  message: String
+  paidAt: DateTime
+  paymentMethod: PaymentMethod!
+  recipient: UserInfoModel!
+  status: PaymentsStatus!
+}
+
+enum PaymentsStatus {
+  EXPIRED
+  FAILED
+  PENDING
+  PROCESSING
+  REFUNDED
+  SUCCEEDED
+}
+
+type PayoutDetailsGQL {
+  card: String
+  iban: String
+  method: PayoutMethod!
+  phone: String
+}
+
+type PayoutHistoryItemModel {
+  amount: Int!
+  createdAt: DateTime!
+  failureReason: String
+  id: ID!
+  method: PayoutMethod!
+  processedAt: DateTime
+  status: PayoutStatus!
+  transactionId: String
+}
+
+type PayoutHistoryResponseModel {
+  data: [PayoutHistoryItemModel!]!
+  meta: PaginationMeta!
+}
+
+type PayoutItemModel {
+  amount: Int!
+  createdAt: DateTime!
+  id: ID!
+  payoutDetails: PayoutDetailsGQL
+  status: PayoutStatus!
+  user: PayoutUserInfoModel!
+}
+
+type PayoutListResponseModel {
+  data: [PayoutItemModel!]!
+  meta: PaginationMeta!
+}
+
+enum PayoutMethod {
+  BANK_TRANSFER
+  CARD_TRANSFER
+  KASPI_TRANSFER
+}
+
+type PayoutSettingsModel {
+  cardHolder: String
+  cardNumber: String
+  iban: String
+  kaspiPhone: String
+  method: PayoutMethod
+}
+
+enum PayoutStatus {
+  COMPLETED
+  FAILED
+  PENDING
+  PROCESSING
+}
+
+type PayoutUserInfoModel {
+  id: ID!
+  username: String!
+}
+
+type PopularTagsModel {
+  count: Int!
+  tag: String!
+}
+
+type ProcessPayoutResponseModel {
+  status: PayoutStatus!
+  success: Boolean!
+}
+
+type ProfileMetaModel {
+  limit: Float!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+type ProjectLikeModel {
+  createdAt: DateTime!
+  id: ID!
+  user: ProjectLikedUserModel!
+}
+
+type ProjectLikedUserModel {
+  avatar: String
+  displayName: String
+  id: ID!
+  username: String!
+}
+
+type ProjectMetaModel {
+  limit: Float!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+type ProjectModel {
+  album: FullModelProject!
+  albumId: String!
+  comments: [CommentModel!]!
+  commentsCount: Int!
+  createdAt: DateTime!
+  description: String
+  id: String!
+  isLiked: Boolean
+  isPublic: Boolean!
+  likedBy: [ProjectLikeModel!]
+  likes: Int!
+  media: [MediaModel!]!
+  tags: [String!]!
+  title: String!
+  updatedAt: DateTime!
+  views: Int!
+}
+
+type ProjectPreviewModel {
+  commentsCount: Int!
+  description: String
+  id: String!
+  isPublic: Boolean!
+  likes: Int!
+  media: [MediaModel!]!
+  tags: [String!]!
+  thumbnailUrl: String!
+  title: String!
+  views: Int!
+}
+
+type Query {
+  findAllAlbums(filter: FilterAlbumInput!): FilterAlbumModel!
+  findAllProject(filter: FilterProjectInput!): FilterProjectModel!
+  findAllUser: [UserModel!]!
+  findCommentByProject(filter: FilterCommentInput!): FilterCommentModel!
+  findCurrentSession: SessionModel!
+  findFollowers(data: FindFollowers!): OutputFollowModel!
+  findFollowings(data: FindFollowings!): OutputFollowModel!
+  findNotificationsByUser(data: PageLimitInput!): OutputNotificationModel!
+  findNotificationsUnreadCount: Float!
+  findOne(id: String!): AlbumModel!
+  findOneProject(projectId: String!): ProjectModel!
+  findProfile: UserModel!
+  findSessionByUser: [SessionModel!]!
+  findSocialMedia: [SocialLinkModel!]!
+  generateTotpSecret: TotpModel!
+  getAllPayouts(data: HistoryPaymentInput!): PayoutListResponseModel!
+  getBalance: BalanceModel!
+  getChannel(username: String!): ChannelModel!
+  getChatMessages(data: getChatMessagesInput!): ChatMessagesResponseModel!
+  getDevices: [DevicesModel!]!
+  getDonationStats: DonationStatsModel!
+  getEarnOnFee: EarnOnFeeModel!
+  getMyChats: [ChatModel!]!
+  getPaymentHistory(data: HistoryPaymentInput!): OutputDonationHistoryModel!
+  getPayoutHistory(data: HistoryPaymentInput): PayoutHistoryResponseModel!
+  getPayoutSettings: PayoutSettingsModel!
+  getPendingPayouts(data: HistoryPaymentInput): PayoutListResponseModel!
+  getProjectCommentCount(projectId: String!): CommnetCountModel!
+  getRepliesComment(data: GetRepliesInput!): FilterCommentModel!
+  getTiersByAuthor(username: String!): [DonationTierModel!]!
+  popularTags(limit: Int! = 5): [PopularTagsModel!]!
+  projectLikes(projectId: String!): [ProjectLikeModel!]!
+}
+
+input RefundPaymentInput {
+  paymentId: String!
+  reason: String
+}
+
+type RefundResponseModel {
+  amount: Int!
+  refundId: String!
+  status: String!
+  success: Boolean!
+}
+
+input RegisterDeviceTokenInput {
+  deviceName: String
+  deviceType: String!
+  token: String!
+}
+
+input RemoveTagInput {
+  projectId: String!
+  tag: String!
+}
+
+type RequestPayoutResponseModel {
+  amount: Int!
+  message: String!
+  method: PayoutMethod!
+  payoutId: String!
+  status: PayoutStatus!
+}
+
+input ResetPasswordInput {
+  email: String!
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type SessionMetadataModel {
+  device: DeviceModel!
+  ip: String!
+  location: LocationModel!
+}
+
+type SessionModel {
+  createdAt: String!
+  id: ID!
+  isCurrent: Boolean!
+  metadata: SessionMetadataModel
+  userId: String!
+}
+
+input SetupPayoutInput {
+  cardHolder: String
+  cardNumber: String
+  iban: String
+  kaspiPhone: String
+  method: PayoutMethod!
+}
+
+type SetupPayoutResponseModel {
+  method: PayoutMethod!
+  success: Boolean!
+}
+
+input SocialLinkInput {
+  title: String!
+  url: String!
+}
+
+type SocialLinkModel {
+  createdAt: DateTime!
+  id: ID!
+  position: Float!
+  title: String!
+  updatedAt: DateTime!
+  url: String!
+}
+
+input SocialLinkOrderInput {
+  id: String!
+  position: Float!
+}
+
+type TotpModel {
+  qrcodeUrl: String!
+  secret: String!
+}
+
+input UpdateAlbumInput {
+  id: String!
+  isPublic: Boolean
+  thumbnailUrl: String
+  title: String
+}
+
+input UpdateCommentInput {
+  id: String!
+  text: String!
+}
+
+input UpdateDonationTierInput {
+  amount: Float
+  benefits: [String!]
+  description: String
+  isActive: Boolean
+  tierId: String!
+  title: String
+}
+
+input UpdateProjectInput {
+  description: String
+  isPublic: Boolean
+  media: [String!]
+  projectId: String!
+  tags: [String!]
+  title: String
+}
+
+type UserChatInfoModel {
+  avatar: String
+  displayName: String!
+  id: String!
+  isOnline: Boolean!
+  lastSeenAt: DateTime
+  username: String!
+}
+
+type UserInfoCommentModel {
+  avatar: String
+  id: String!
+  username: String!
+}
+
+type UserInfoModel {
+  avatar: String
+  displayName: String
+  id: String!
+  username: String!
+}
+
+type UserModel {
+  albums: [String!]!
+  avatar: String
+  bankCardHolder: String!
+  bankCardNumber: String!
+  bankIBAN: String!
+  bio: String
+  comments: [String!]!
+  createdAt: DateTime!
+  deactivatedAt: DateTime
+  displayName: String!
+  email: String!
+  id: ID!
+  isDeactivated: Boolean!
+  isEmailVerified: Boolean!
+  isOnline: Boolean!
+  isTotpEnabled: Boolean!
+  isVerified: Boolean!
+  kaspiPhone: String!
+  lastSeenAt: DateTime!
+  notificaitons: [NotificationModel!]!
+  notifications: [String!]!
+  notificationsSettings: NotificationSettingsModel!
+  password: String!
+  pendingNewEmail: String!
+  phoneNumber: String!
+  projectLikes: [String!]!
+  role: Role!
+  socialLink: [SocialLinkModel!]
+  subscriptions: String
+  totpSecret: String
+  updatedAt: DateTime!
+  username: String!
+}
+
+input VerificationInput {
+  token: String!
+}
+
+type changeNotificationSettingsModel {
+  notificationSettings: NotificationSettingsModel!
+}
+
+input getChatMessagesInput {
+  chatId: String!
+  limit: Int! = 50
+  page: Int! = 1
+  userId: String!
+}

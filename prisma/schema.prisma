@@ -1,0 +1,476 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "./generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+
+  username        String  @unique
+  email           String  @unique
+  pendingNewEmail String? @map("pending_new_email")
+  displayName     String
+  password        String
+  tokens          Token[]
+
+  avatar                String?
+  bio                   String?
+  albums                Album[]
+  projectLikes          ProjectLike[]
+  comments              Comment[]
+  notifications         Notifications[]
+  notificationsSettings NotificationsSettings?
+
+  isVerified      Boolean      @default(false) @map("is_verified")
+  isEmailVerified Boolean      @default(false) @map("is_email_verified")
+  isTotpEnabled   Boolean      @default(false) @map("is_totp_enabled")
+  totpSecret      String?      @map("totp_secret")
+  isDeactivated   Boolean      @default(false) @map("is_deactivated")
+  deactivatedAt   DateTime?    @map("deactivated_at")
+  accounts        Account[]
+  socialLink      SocialLink[]
+
+  followers  Follow[] @relation(name: "followers")
+  followings Follow[] @relation(name: "following")
+  follows    Follow[]
+
+  fcmTokens DeviceToken[]
+
+  phoneNumber String? @unique @map("phone_number")
+
+  donationTiers    DonationTier[]
+  donationsGiven   Payment[]      @relation("DonorPayments")
+  donationRecieved Payment[]      @relation("RecieptPayments")
+  payouts          Payout[]
+
+  kaspiPhone     String? @map("kaspi_phone")
+  bankCardNumber String? @map("bank_card_number")
+  bankCardHolder String? @map("bank_card_holder")
+  bankIBAN       String? @map("bank_iban")
+
+  payoutMethod PayoutMethod? @map("payout_method")
+
+  chatMembers ChatMember[]
+  messages    Message[]
+
+  isOnline   Boolean   @default(false) @map("is_online")
+  lastSeenAt DateTime? @map("last_seen_at")
+
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Chat {
+  id String @id @default(uuid())
+
+  chatMembers ChatMember[]
+  messages    Message[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("chats")
+}
+
+model ChatMember {
+  id String @id @default(uuid())
+
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId String @map("chat_id")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  lastReadMessageId String?   @map("last_read_message_id")
+  lastReadAt        DateTime? @map("last_read_at")
+
+  @@unique([chatId, userId])
+  @@index([userId])
+  @@map("chat_members")
+}
+
+model Message {
+  id String @id @default(uuid())
+
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId String @map("chat_id")
+
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId String @map("sender_id")
+
+  text     String
+  isRead   Boolean @default(false) @map("is_read")
+  isEdited Boolean @default(false) @map("is_edited")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([chatId, createdAt])
+  @@index([senderId])
+  @@map("messages")
+}
+
+model Account {
+  id         String @id @default(uuid())
+  provider   String
+  providerId String @map("provider_id")
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([provider, providerId])
+  @@map("accounts")
+}
+
+model SocialLink {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  title    String
+  url      String
+  position Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("social_links")
+}
+
+model Album {
+  id String @id @default(uuid())
+
+  title        String    @unique
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String    @map("user_id")
+  projects     Project[]
+  isPublic     Boolean   @default(true) @map("is_public")
+  thumbnailUrl String    @map("thumbnail_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("albums")
+}
+
+model Project {
+  id String @id @default(uuid())
+
+  title        String?
+  tags         String[]      @default([])
+  description  String?
+  album        Album         @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId      String        @map("album_id")
+  media        Media[]
+  likes        Int           @default(0)
+  views        Int           @default(0)
+  projectLikes ProjectLike[]
+  comment      Comment[]
+  isPublic     Boolean       @default(true) @map("is_public")
+  status       ProjectStatus @default(DRAFT)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model ProjectLike {
+  id        String  @id @default(uuid())
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String  @map("user_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String  @map("project_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, projectId])
+  @@map("project_likes")
+}
+
+model Media {
+  id String @id @default(uuid())
+
+  url       String
+  mediaType MediaType @default(IMAGE)
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String    @map("project_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("medias")
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  text String
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String    @map("project_id")
+  parent    Comment?  @relation("comment_replies", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId  String?   @map("parent_id")
+  replies   Comment[] @relation("comment_replies")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comments")
+}
+
+model Follow {
+  id String @id @default(uuid())
+
+  follower   User   @relation(name: "followers", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId String @map("follower_id")
+
+  following   User   @relation(name: "following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String @map("following_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@map("follows")
+}
+
+model Notifications {
+  id String @id @default(uuid())
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @map("user_id")
+
+  type    NotificationsType
+  message String
+  isRead  Boolean           @default(false) @map("is_read")
+
+  actorId   String? @map("actor_id")
+  projectId String? @map("project_id")
+  albumId   String? @map("album_id")
+  commentId String? @map("comment_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model DeviceToken {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  token String @unique
+
+  deviceType String @map("device_type")
+  deviceName String @map("device_name")
+
+  lastUsedAt DateTime @default(now()) @map("last_used_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([userId, deviceType])
+  @@map("device_tokens")
+}
+
+model NotificationsSettings {
+  id String @id @default(uuid())
+
+  siteNotifications Boolean @default(true) @map("site_notifications")
+  pushNotifications Boolean @default(true) @map("push_notifications")
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notifications_settings")
+}
+
+model DonationTier {
+  id String @id @default(uuid())
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String @map("author_id")
+
+  title       String
+  description String?
+  amount      Int
+  currency    String   @default("KZT")
+  benefits    String[] @default([])
+  position    Int      @default(0)
+  isActive    Boolean  @default(true) @map("is_active")
+
+  payments Payment[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([authorId, isActive])
+  @@map("donation_tiers")
+}
+
+model Payment {
+  id String @id @default(uuid())
+
+  donor   User   @relation(name: "DonorPayments", fields: [donorId], references: [id], onDelete: Cascade)
+  donorId String @map("donor_id")
+
+  recipent    User   @relation(name: "RecieptPayments", fields: [recipientId], references: [id], onDelete: Cascade)
+  recipientId String @map("reciept_id")
+
+  donationTier DonationTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  tierId       String?       @map("donation_tier_id")
+
+  platformFee Int @default(0) @map("platform_fee")
+
+  amount        Int
+  currency      String         @default("KZT")
+  status        PaymentsStatus @default(PENDING)
+  paymentMethod PaymentMethod  @map("payment_method")
+
+  freedomPayTransactionId String? @unique @map("freedom_pay_transaction_id")
+  freedomPayPaymentUrl    String? @map("freedom_pay_payment_url")
+
+  kaspiTransactionId String? @unique @map("kaspi_transaction_id")
+  kaspiPaymentUrl    String? @unique @map("kaspi_payment_url")
+  kaspiQrCode        String? @map("kaspi_qr_code")
+
+  message     String?
+  isAnonymous Boolean @default(false) @map("is_anonymous")
+
+  paidAt    DateTime? @map("paid_at")
+  expiresAt DateTime? @map("expires_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@index([donorId])
+  @@index([recipientId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
+}
+
+model Payout {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  amount   Int
+  currency String       @default("KZT")
+  status   PayoutStatus @default(PENDING)
+  method   PayoutMethod
+
+  phoneNumber String? @map("phone_number")
+  cardNumber  String? @map("card_number")
+  iban        String?
+
+  transactionId String? @unique @map("transaction_id")
+  failureReason String? @map("failure_reason")
+
+  processedAt DateTime? @map("processed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([userId, status])
+  @@map("payouts")
+}
+
+model Token {
+  id String @id @default(uuid())
+
+  token     String
+  type      TokenType
+  expiresIn DateTime  @map("expires_in")
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?   @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("tokens")
+}
+
+enum TokenType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+  DEACTIVATE_ACCOUNT
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum NotificationsType {
+  NEW_PROJECT
+  NEW_FOLLOWER
+  PROJECT_LIKE
+  PROJECT_COMMENT
+  COMMENT_REPLY
+  NEW_SPONSORSHIP
+  ENABLE_TWO_FACTOR
+  DISABLE_TWO_FACTOR
+  VERIFIED_CHANNEL
+  DONATION_RECEIVED
+  REFUND_PROCESSED
+  PAYOUT_SUCCESS
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum PaymentsStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  EXPIRED
+}
+
+enum PayoutMethod {
+  KASPI_TRANSFER
+  CARD_TRANSFER
+  BANK_TRANSFER
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentMethod {
+  KASPI_PAY
+  FREEDOM_PAY
+}
