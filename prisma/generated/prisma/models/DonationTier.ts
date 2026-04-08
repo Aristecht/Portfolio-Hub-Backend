@@ -234,7 +234,7 @@ export type DonationTierGroupByOutputType = {
   _max: DonationTierMaxAggregateOutputType | null
 }
 
-type GetDonationTierGroupByPayload<T extends DonationTierGroupByArgs> = Prisma.PrismaPromise<
+export type GetDonationTierGroupByPayload<T extends DonationTierGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<DonationTierGroupByOutputType, T['by']> &
       {
@@ -1524,6 +1524,11 @@ export type DonationTierFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` DonationTiers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DonationTiers.
+   */
   distinct?: Prisma.DonationTierScalarFieldEnum | Prisma.DonationTierScalarFieldEnum[]
 }
 

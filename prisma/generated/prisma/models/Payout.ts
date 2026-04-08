@@ -248,7 +248,7 @@ export type PayoutGroupByOutputType = {
   _max: PayoutMaxAggregateOutputType | null
 }
 
-type GetPayoutGroupByPayload<T extends PayoutGroupByArgs> = Prisma.PrismaPromise<
+export type GetPayoutGroupByPayload<T extends PayoutGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PayoutGroupByOutputType, T['by']> &
       {
@@ -1454,6 +1454,11 @@ export type PayoutFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` Payouts.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Payouts.
+   */
   distinct?: Prisma.PayoutScalarFieldEnum | Prisma.PayoutScalarFieldEnum[]
 }
 
