@@ -22,6 +22,7 @@ async function bootstrap() {
   const redis = app.get(RedisService);
 
   app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')));
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
   app.use(
     session({
       secret: config.getOrThrow<string>('SESSION_SECRET'),
