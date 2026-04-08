@@ -32,8 +32,4 @@ COPY --from=build /app/dist ./dist
 
 COPY --from=build /app/prisma/generated ./prisma/generated
 
-RUN mkdir -p /app/src/core/config
-
-COPY --from=build /app/src/core/config/firebase-service-account.json /app/src/core/config/firebase-service-account.json
-
 CMD ["node", "dist/src/main.js"]

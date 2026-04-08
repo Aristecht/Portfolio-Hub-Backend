@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import fs from 'fs';
 import path from 'path';
 import * as admin from 'firebase-admin';
 
@@ -10,6 +11,11 @@ export class FirebaseService implements OnModuleInit {
 
   onModuleInit() {
     try {
+      if (admin.apps.length > 0) {
+        this.app = admin.app();
+        return;
+      }
+
       const serviceAccountPath = path.join(
         process.cwd(),
         'src',
@@ -18,8 +24,36 @@ export class FirebaseService implements OnModuleInit {
         'firebase-service-account.json',
       );
 
+      const serviceAccountJson = this.configService.get<string>(
+        'FIREBASE_SERVICE_ACCOUNT_JSON',
+      );
+      const credentialsPathFromEnv = this.configService.get<string>(
+        'GOOGLE_APPLICATION_CREDENTIALS',
+      );
+
+      let credential: admin.credential.Credential;
+
+      if (serviceAccountJson) {
+        const parsed = JSON.parse(serviceAccountJson);
+        credential = admin.credential.cert(parsed as admin.ServiceAccount);
+      } else {
+        const resolvedCredentialsPath =
+          credentialsPathFromEnv && fs.existsSync(credentialsPathFromEnv)
+            ? credentialsPathFromEnv
+            : serviceAccountPath;
+
+        if (!fs.existsSync(resolvedCredentialsPath)) {
+          console.log(
+            '⚠️ Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT_JSON or GOOGLE_APPLICATION_CREDENTIALS to enable push notifications.',
+          );
+          return;
+        }
+
+        credential = admin.credential.cert(resolvedCredentialsPath);
+      }
+
       this.app = admin.initializeApp({
-        credential: admin.credential.cert(serviceAccountPath),
+        credential,
       });
       console.log('✅ Firebase initialized successfully');
     } catch (error) {
