@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { Authorization } from '../../../shared/decorators/authorization.decorator';
 import { UploadedFile as FileUpload } from '../../../shared/types/uploadedFile.types';
 import { Authorized } from '../../../shared/decorators/authorized.decorator';
@@ -44,7 +45,12 @@ export class ProjectController {
 
   @Post(':id/video')
   @Authorization()
-  @UseInterceptors(FileInterceptor('video'))
+  @UseInterceptors(
+    FileInterceptor('video', {
+      storage: memoryStorage(),
+      limits: { fileSize: 100 * 1024 * 1024 },
+    }),
+  )
   async uploadVideo(
     @Authorized() user: User,
     @Param('id') id: string,
