@@ -10,7 +10,7 @@ COPY package.json yarn.lock .yarnrc.yml ./
 
 COPY .yarn .yarn
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --immutable
 
 FROM base AS build
 
@@ -26,7 +26,7 @@ WORKDIR /app
 
 COPY --from=build /app/package.json /app/yarn.lock ./
 
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --immutable
 
 COPY --from=build /app/dist ./dist
 
